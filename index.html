@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sĩ Tử 2026 | Ultimate Command Center</title>
+    <title>Web ôn thi</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root {
             --bg-color: #113d3f;
@@ -59,7 +60,16 @@
             border: 1px solid var(--border); backdrop-filter: blur(10px); flex-wrap: wrap; gap: 15px;
         }
 
-        .logo-area { font-size: 26px; font-weight: 800; letter-spacing: -1.5px; }
+        /* LOGO TÍCH HỢP */
+        .logo-area {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 26px; font-weight: 800; letter-spacing: -1.5px;
+        }
+        .logo-symbol {
+            width: 40px; height: 40px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10 L90 30 L50 50 L10 30 Z" fill="%235ce1e6"/><path d="M10 30 V70 C10 85 50 95 50 95 C50 95 90 85 90 70 V30 L50 50 Z" fill="%23ffffff" opacity="0.8"/><path d="M50 50 L50 95" stroke="%235ce1e6" stroke-width="2"/><circle cx="50" cy="50" r="3" fill="%23ffffff"/><path d="M50 15 A15 15 0 0 1 50 45" fill="none" stroke="%23ff0055" stroke-width="2" stroke-linecap="round"/><path d="M50 20 A10 10 0 0 1 50 40" fill="none" stroke="%23ff0055" stroke-width="1.5" stroke-linecap="round"/><circle cx="50" cy="10" r="2" fill="%23ffffff"/></svg>') no-repeat center center;
+            background-size: contain; filter: drop-shadow(0 0 8px var(--accent-glow));
+        }
 
         .quote-wrapper {
             display: flex; align-items: center; gap: 12px;
@@ -79,13 +89,11 @@
         .quote-wrapper:hover .btn-icon { opacity: 1; visibility: visible; }
         .btn-icon:hover { color: var(--accent); background: rgba(255,255,255,0.1); }
 
-        /* Đếm ngược */
         .cd-group { display: flex; gap: 10px; }
         .cd-box { background: var(--box-inner); padding: 12px 18px; border-radius: 16px; text-align: center; min-width: 85px; border: 1px solid transparent; }
         .cd-num { font-family: 'Plus Jakarta Sans'; font-size: 32px; font-weight: 800; color: #ffffff; display: block; line-height: 1; margin-bottom: 5px;}
         .cd-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.8; font-weight: 600; display: block; }
 
-        /* Modern Card List */
         .score-row {
             display: flex; justify-content: space-between; align-items: center;
             padding: 16px 20px; background: var(--box-inner);
@@ -95,11 +103,9 @@
         .score-val { font-family: 'JetBrains Mono'; color: var(--accent); font-size: 19px; font-weight: 800; }
         .tag-khôi { font-size: 9px; background: var(--accent); color: #000; padding: 4px 7px; border-radius: 8px; font-weight: 800; margin-left: 10px; text-transform: uppercase; }
 
-        /* Modern Timer Card */
         .timer-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; position: relative; gap: 10px; }
         .timer-display { font-family: 'JetBrains Mono'; font-size: clamp(90px, 9vw, 130px); font-weight: 800; margin: 15px 0; letter-spacing: -3px; line-height: 1; text-shadow: 0 0 45px var(--accent-glow); color: #fff; }
 
-        /* Buttons */
         .btn {
             background: var(--card); border: 1px solid var(--border); color: white; padding: 15px 30px; border-radius: 16px; cursor: pointer; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
@@ -116,7 +122,6 @@
         .btn-focus { position: absolute; top: 0; right: 0; padding: 9px 18px; border-radius: 12px; background: rgba(0,255,255,0.05); border: 1px solid #00ffff80; color: #00ffff; font-size: 12px; font-weight: 800; text-shadow: 0 0 10px rgba(0,255,255,0.6); box-shadow: 0 0 15px rgba(0,255,255,0.1); text-transform: uppercase; letter-spacing: 1px; z-index: 10;}
         .btn-focus:hover { background: #00ffff; color: #000; border-color: #00ffff; box-shadow: 0 0 30px rgba(0,255,255,0.4); text-shadow: none;}
 
-        /* Modern Input */
         .task-input-group { position: relative; margin-bottom: 15px; }
         input[type="text"], input[type="number"], textarea {
             width: 100%; padding: 18px 22px; border-radius: 16px; background: var(--box-inner); border: 1px solid transparent; color: white; outline: none; font-size: 15px; font-family: inherit;
@@ -126,7 +131,6 @@
         .progress-bar { height: 7px; background: var(--box-inner); border-radius: 10px; margin-bottom: 22px; overflow: hidden; border: 1px solid var(--border); }
         .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
 
-        /* Modern Task List */
         .task-list { flex-grow: 1; overflow-y: auto; max-height: 250px; padding-right: 5px; margin-bottom: 10px;}
         .task-item { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: 16px; background: var(--box-inner); margin-bottom: 10px; cursor: pointer; border: 1px solid transparent; }
         .task-item:hover { border-color: var(--border); background: rgba(0,0,0,0.3); }
@@ -138,7 +142,6 @@
         .task-item:hover .del-btn { opacity: 1; color: var(--accent-danger); }
         .del-btn:hover { background: rgba(255, 0, 85, 0.15); }
 
-        /* Modern Calendar */
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; margin-top: 15px; }
         .cal-header { text-align: center; font-size: 11px; font-weight: 800; opacity: 0.6; margin-bottom: 6px; text-transform: uppercase; color: #fff; }
         .cal-day { aspect-ratio: 1; background: var(--box-inner); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; position: relative; border: 1px solid transparent; cursor: pointer; color: #fff;}
@@ -146,7 +149,6 @@
         .cal-day.empty { background: transparent; border: none; cursor: default;}
         .cal-mark { position: absolute; bottom: 5px; width: 5px; height: 5px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
 
-        /* Modern Modal System */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.4s ease; }
         .modal.show { display: flex; opacity: 1; }
         .modal-content { width: 90%; max-width: 500px; background: #113d3f; padding: 35px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(0,0,0,0.6); transform: translateY(30px); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
@@ -154,10 +156,9 @@
         .section-label { font-size: 12px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 18px; display: block; }
 
         #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; }
-        .toast { background: #1a5b5e; border: 1px solid var(--accent); color: white; padding: 16px 28px; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); font-weight: 600; animation: slideIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
+        .toast { background: #1a5b5e; border: 1px solid var(--accent); color: white; padding: 16px 28px; border-radius: 166px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); font-weight: 600; animation: slideIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        /* ================= DEEP WORK MODE - MULTIPLE CLOCKS ================= */
         #focus-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: radial-gradient(circle at 50% 50%, #0a2526 0%, #020606 100%);
@@ -171,7 +172,6 @@
             transition: width 1s linear; box-shadow: 0 0 15px var(--accent); z-index: 10001;
         }
 
-        /* Nút chuyển đổi đồng hồ */
         .btn-switch-clock {
             position: absolute; top: 30px; right: 30px; z-index: 10002;
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
@@ -181,12 +181,10 @@
         }
         .btn-switch-clock:hover { background: rgba(92, 225, 230, 0.15); color: var(--accent); border-color: var(--accent); }
 
-        /* Khung chứa các đồng hồ */
         .clock-wrapper { position: relative; display: flex; justify-content: center; align-items: center; width: 100%; height: 50vh; }
         .clock-view { display: none; opacity: 0; transition: opacity 0.5s ease; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%;}
         .clock-view.active { display: flex; opacity: 1; }
 
-        /* Khối tiêu đề chung (Deep Work / Break Time) */
         .focus-mode-title {
             color: var(--accent); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; 
             font-weight: 700; letter-spacing: 15px; text-transform: uppercase; opacity: 0.8;
@@ -196,7 +194,6 @@
         .live-dot { width: 8px; height: 8px; background: #ff0055; border-radius: 50%; box-shadow: 0 0 10px #ff0055; animation: blink 1.5s infinite ease-in-out; }
         @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; box-shadow: 0 0 15px #ff0055; } }
 
-        /* --- Style 1: Cyber Glow --- */
         .style1-ring { padding: 40px; border-radius: 40px; background: rgba(255,255,255,0.01); border: 1px solid rgba(92, 225, 230, 0.05); animation: breathe 4s infinite ease-in-out; }
         @keyframes breathe { 0% { box-shadow: 0 0 40px rgba(0,0,0,0.5); border-color: rgba(92, 225, 230, 0.05); } 50% { box-shadow: 0 0 80px rgba(0,0,0,0.8), inset 0 0 50px rgba(92, 225, 230, 0.1); border-color: rgba(92, 225, 230, 0.2); transform: scale(1.02); } 100% { box-shadow: 0 0 40px rgba(0,0,0,0.5); border-color: rgba(92, 225, 230, 0.05); } }
         .style1-text {
@@ -204,17 +201,15 @@
             background: linear-gradient(135deg, #ffffff 20%, #5ce1e6 80%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0px 15px 25px rgba(0,0,0,0.6));
         }
 
-        /* --- Style 2: Zen Circle --- */
         .style2-container { position: relative; width: 350px; height: 350px; display: flex; align-items: center; justify-content: center; }
         .style2-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
         .style2-circle-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 4; }
         .style2-circle-prog { fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 880; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; filter: drop-shadow(0 0 8px var(--accent-glow)); }
         .style2-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 65px; font-weight: 300; color: #fff; letter-spacing: 4px; }
 
-        /* --- Style 3: Retro Box --- */
         .style3-container { display: flex; gap: 20px; align-items: center; }
         .style3-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 120px; height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.3); position: relative; overflow: hidden;}
-        .style3-box::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(0,0,0,0.4); } /* Nếp gấp giữa mô phỏng Flip Clock */
+        .style3-box::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(0,0,0,0.4); } 
         .style3-num { font-family: 'JetBrains Mono', monospace; font-size: 70px; font-weight: 800; color: #fff; line-height: 1; }
         .style3-label { font-family: 'Plus Jakarta Sans'; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-top: 15px; position: absolute; bottom: 15px;}
         .style3-colon { font-size: 50px; font-weight: 800; color: rgba(255,255,255,0.3); animation: fade 1s infinite; }
@@ -223,7 +218,6 @@
         .focus-exit-hint { position: absolute; bottom: 40px; color: rgba(255,255,255,0.3); font-size: 12px; letter-spacing: 4px; font-weight: 500; text-transform: uppercase; transition: var(--trans-quick); }
         .focus-exit-hint:hover { color: var(--accent); cursor: pointer; }
 
-        /* Responsive */
         @media (max-width: 1250px) { .main-grid { grid-template-columns: 1fr 1fr; } .main-grid > .card:nth-child(2) { grid-column: 1 / -1; order: -1; } }
         @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } .header-strip { flex-direction: column; text-align: center; } .quote-wrapper { width: 100%; margin: 15px 0; } .cd-group { width: 100%; justify-content: center; flex-wrap: wrap;} .timer-display { font-size: 85px; } .style3-box { width: 80px; height: 100px; } .style3-num { font-size: 45px; } .style3-label {font-size: 9px; bottom: 8px;} .style2-container { width: 250px; height: 250px;} .style2-text {font-size: 45px;}}
     </style>
@@ -231,7 +225,10 @@
 <body>
 
 <div class="header-strip">
-    <div class="logo-area">SĨ TỬ <span style="color:var(--accent)">2026</span></div>
+    <div class="logo-area">
+        <div class="logo-symbol"></div>
+        SĨ TỬ <span style="color:var(--accent)">2026</span>
+    </div>
     
     <div class="quote-wrapper">
         <div id="random-quote">"Trí thức là sức mạnh"</div>
