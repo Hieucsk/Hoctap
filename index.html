@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sĩ Tử 2026 | Ultimate Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #113d3f;
+            --card: rgba(255, 255, 255, 0.07);
+            --card-hover: rgba(255, 255, 255, 0.1);
+            --box-inner: rgba(0, 0, 0, 0.2);
+            
+            --accent: #5ce1e6;
+            --accent-cyan: #00ffff;
+            --accent-danger: #ff0055;
+            --accent-glow: rgba(92, 225, 230, 0.4);
+            
+            --text: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            
+            --trans-quick: all 0.2s ease;
+            --trans-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * { box-sizing: border-box; outline: none; transition: var(--trans-quick); }
+        
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        body {
+            margin: 0; padding: 20px;
+            background: radial-gradient(circle at 80% 90%, #206d6f 0%, #113d3f 60%, #0d2c2d 100%);
+            background-color: var(--bg-color);
+            background-attachment: fixed;
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+
+        .main-grid { display: grid; grid-template-columns: 360px 1fr 360px; gap: 20px; flex-grow: 1; }
+
+        .card {
+            background: var(--card); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-radius: 24px; padding: 25px; border: 1px solid var(--border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
+        }
+
+        /* Modern Header */
+        .header-strip {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 25px; background: var(--card); border-radius: 20px;
+            border: 1px solid var(--border); backdrop-filter: blur(10px); flex-wrap: wrap; gap: 15px;
+        }
+
+        .logo-area { font-size: 26px; font-weight: 800; letter-spacing: -1.5px; }
+
+        .quote-wrapper {
+            display: flex; align-items: center; gap: 12px;
+            background: var(--box-inner); padding: 12px 25px; border-radius: 50px;
+            font-style: italic; font-size: 14px; border: 1px solid transparent;
+            text-align: center; flex: 1; min-width: 250px; margin: 0 20px;
+            position: relative; transition: var(--trans-smooth);
+        }
+        .quote-wrapper:hover { background: rgba(0,0,0,0.3); border-color: var(--border); }
+        
+        #random-quote { flex: 1; color: #fff; font-weight: 500; }
+        
+        .btn-icon {
+            background: transparent; border: none; cursor: pointer; color: var(--text-dim); padding: 5px;
+            font-size: 16px; border-radius: 50%; opacity: 0; visibility: hidden;
+        }
+        .quote-wrapper:hover .btn-icon { opacity: 1; visibility: visible; }
+        .btn-icon:hover { color: var(--accent); background: rgba(255,255,255,0.1); }
+
+        /* Đếm ngược */
+        .cd-group { display: flex; gap: 10px; }
+        .cd-box { background: var(--box-inner); padding: 12px 18px; border-radius: 16px; text-align: center; min-width: 85px; border: 1px solid transparent; }
+        .cd-num { font-family: 'Plus Jakarta Sans'; font-size: 32px; font-weight: 800; color: #ffffff; display: block; line-height: 1; margin-bottom: 5px;}
+        .cd-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.8; font-weight: 600; display: block; }
+
+        /* Modern Card List */
+        .score-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 20px; background: var(--box-inner);
+            border-radius: 16px; margin-bottom: 12px; border: 1px solid transparent;
+        }
+        .score-row:hover { border-color: var(--border); background: rgba(0,0,0,0.3); }
+        .score-val { font-family: 'JetBrains Mono'; color: var(--accent); font-size: 19px; font-weight: 800; }
+        .tag-khôi { font-size: 9px; background: var(--accent); color: #000; padding: 4px 7px; border-radius: 8px; font-weight: 800; margin-left: 10px; text-transform: uppercase; }
+
+        /* Modern Timer Card */
+        .timer-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; position: relative; gap: 10px; }
+        .timer-display { font-family: 'JetBrains Mono'; font-size: clamp(90px, 9vw, 130px); font-weight: 800; margin: 15px 0; letter-spacing: -3px; line-height: 1; text-shadow: 0 0 45px var(--accent-glow); color: #fff; }
+
+        /* Buttons */
+        .btn {
+            background: var(--card); border: 1px solid var(--border); color: white; padding: 15px 30px; border-radius: 16px; cursor: pointer; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn:hover { background: var(--card-hover); transform: translateY(-3px); }
+        .btn:active { transform: translateY(1px); transition: 0.1s; }
+        .btn-primary { background: var(--accent); color: #0b2223; border: none; font-weight: 800;}
+        .btn-primary:hover { background: #71f0f5; box-shadow: 0 0 30px var(--accent-glow); color: #000; }
+        .btn-danger { background: rgba(255, 0, 85, 0.15); color: var(--accent-danger); border-color: rgba(255, 0, 85, 0.3); }
+        .btn-danger:hover { background: var(--accent-danger); color: white; }
+
+        .btn-mini { background: transparent; border: 1px solid var(--border); color: var(--text-dim); padding: 7px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 12px; }
+        .btn-mini:hover { background: var(--card); color: #fff; border-color: var(--accent); }
+        
+        .btn-focus { position: absolute; top: 0; right: 0; padding: 9px 18px; border-radius: 12px; background: rgba(0,255,255,0.05); border: 1px solid #00ffff80; color: #00ffff; font-size: 12px; font-weight: 800; text-shadow: 0 0 10px rgba(0,255,255,0.6); box-shadow: 0 0 15px rgba(0,255,255,0.1); text-transform: uppercase; letter-spacing: 1px; z-index: 10;}
+        .btn-focus:hover { background: #00ffff; color: #000; border-color: #00ffff; box-shadow: 0 0 30px rgba(0,255,255,0.4); text-shadow: none;}
+
+        /* Modern Input */
+        .task-input-group { position: relative; margin-bottom: 15px; }
+        input[type="text"], input[type="number"], textarea {
+            width: 100%; padding: 18px 22px; border-radius: 16px; background: var(--box-inner); border: 1px solid transparent; color: white; outline: none; font-size: 15px; font-family: inherit;
+        }
+        input:focus, textarea:focus { border-color: var(--accent); background: rgba(0,0,0,0.3); }
+
+        .progress-bar { height: 7px; background: var(--box-inner); border-radius: 10px; margin-bottom: 22px; overflow: hidden; border: 1px solid var(--border); }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
+
+        /* Modern Task List */
+        .task-list { flex-grow: 1; overflow-y: auto; max-height: 250px; padding-right: 5px; margin-bottom: 10px;}
+        .task-item { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: 16px; background: var(--box-inner); margin-bottom: 10px; cursor: pointer; border: 1px solid transparent; }
+        .task-item:hover { border-color: var(--border); background: rgba(0,0,0,0.3); }
+        .task-item.done { opacity: 0.5; text-decoration: line-through; }
+        .dot { width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--text-dim); display:flex; align-items:center; justify-content:center; }
+        .done .dot { background: var(--accent); border-color: var(--accent); }
+        .done .dot::after { content: '✓'; color: #0b2223; font-size: 12px; font-weight: bold; }
+        .del-btn { opacity: 0; color: var(--text-dim); font-weight: bold; padding: 5px; border-radius: 8px; font-size: 16px;}
+        .task-item:hover .del-btn { opacity: 1; color: var(--accent-danger); }
+        .del-btn:hover { background: rgba(255, 0, 85, 0.15); }
+
+        /* Modern Calendar */
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; margin-top: 15px; }
+        .cal-header { text-align: center; font-size: 11px; font-weight: 800; opacity: 0.6; margin-bottom: 6px; text-transform: uppercase; color: #fff; }
+        .cal-day { aspect-ratio: 1; background: var(--box-inner); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; position: relative; border: 1px solid transparent; cursor: pointer; color: #fff;}
+        .cal-day.active { border-color: var(--accent); background: rgba(92, 225, 230, 0.15); color: var(--accent); }
+        .cal-day.empty { background: transparent; border: none; cursor: default;}
+        .cal-mark { position: absolute; bottom: 5px; width: 5px; height: 5px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
+
+        /* Modern Modal System */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.4s ease; }
+        .modal.show { display: flex; opacity: 1; }
+        .modal-content { width: 90%; max-width: 500px; background: #113d3f; padding: 35px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(0,0,0,0.6); transform: translateY(30px); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .modal.show .modal-content { transform: translateY(0); }
+        .section-label { font-size: 12px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 18px; display: block; }
+
+        #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; }
+        .toast { background: #1a5b5e; border: 1px solid var(--accent); color: white; padding: 16px 28px; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); font-weight: 600; animation: slideIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* ================= DEEP WORK MODE - MULTIPLE CLOCKS ================= */
+        #focus-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #0a2526 0%, #020606 100%);
+            z-index: 10000; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
+            opacity: 0; transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        #focus-overlay.show { display: flex; opacity: 1; }
+
+        #focus-progress-top {
+            position: absolute; top: 0; left: 0; height: 4px; background: var(--accent); width: 0%;
+            transition: width 1s linear; box-shadow: 0 0 15px var(--accent); z-index: 10001;
+        }
+
+        /* Nút chuyển đổi đồng hồ */
+        .btn-switch-clock {
+            position: absolute; top: 30px; right: 30px; z-index: 10002;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-dim); padding: 10px 15px; border-radius: 12px;
+            font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            backdrop-filter: blur(5px);
+        }
+        .btn-switch-clock:hover { background: rgba(92, 225, 230, 0.15); color: var(--accent); border-color: var(--accent); }
+
+        /* Khung chứa các đồng hồ */
+        .clock-wrapper { position: relative; display: flex; justify-content: center; align-items: center; width: 100%; height: 50vh; }
+        .clock-view { display: none; opacity: 0; transition: opacity 0.5s ease; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%;}
+        .clock-view.active { display: flex; opacity: 1; }
+
+        /* Khối tiêu đề chung (Deep Work / Break Time) */
+        .focus-mode-title {
+            color: var(--accent); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; 
+            font-weight: 700; letter-spacing: 15px; text-transform: uppercase; opacity: 0.8;
+            text-shadow: 0 0 20px rgba(92, 225, 230, 0.4); display: flex; align-items: center; gap: 15px;
+            margin-top: 40px;
+        }
+        .live-dot { width: 8px; height: 8px; background: #ff0055; border-radius: 50%; box-shadow: 0 0 10px #ff0055; animation: blink 1.5s infinite ease-in-out; }
+        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; box-shadow: 0 0 15px #ff0055; } }
+
+        /* --- Style 1: Cyber Glow --- */
+        .style1-ring { padding: 40px; border-radius: 40px; background: rgba(255,255,255,0.01); border: 1px solid rgba(92, 225, 230, 0.05); animation: breathe 4s infinite ease-in-out; }
+        @keyframes breathe { 0% { box-shadow: 0 0 40px rgba(0,0,0,0.5); border-color: rgba(92, 225, 230, 0.05); } 50% { box-shadow: 0 0 80px rgba(0,0,0,0.8), inset 0 0 50px rgba(92, 225, 230, 0.1); border-color: rgba(92, 225, 230, 0.2); transform: scale(1.02); } 100% { box-shadow: 0 0 40px rgba(0,0,0,0.5); border-color: rgba(92, 225, 230, 0.05); } }
+        .style1-text {
+            font-family: 'JetBrains Mono', monospace; font-size: clamp(70px, 15vw, 160px); font-weight: 800; line-height: 1; letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffffff 20%, #5ce1e6 80%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0px 15px 25px rgba(0,0,0,0.6));
+        }
+
+        /* --- Style 2: Zen Circle --- */
+        .style2-container { position: relative; width: 350px; height: 350px; display: flex; align-items: center; justify-content: center; }
+        .style2-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+        .style2-circle-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 4; }
+        .style2-circle-prog { fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 880; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; filter: drop-shadow(0 0 8px var(--accent-glow)); }
+        .style2-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 65px; font-weight: 300; color: #fff; letter-spacing: 4px; }
+
+        /* --- Style 3: Retro Box --- */
+        .style3-container { display: flex; gap: 20px; align-items: center; }
+        .style3-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 120px; height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.3); position: relative; overflow: hidden;}
+        .style3-box::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(0,0,0,0.4); } /* Nếp gấp giữa mô phỏng Flip Clock */
+        .style3-num { font-family: 'JetBrains Mono', monospace; font-size: 70px; font-weight: 800; color: #fff; line-height: 1; }
+        .style3-label { font-family: 'Plus Jakarta Sans'; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-top: 15px; position: absolute; bottom: 15px;}
+        .style3-colon { font-size: 50px; font-weight: 800; color: rgba(255,255,255,0.3); animation: fade 1s infinite; }
+        @keyframes fade { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+
+        .focus-exit-hint { position: absolute; bottom: 40px; color: rgba(255,255,255,0.3); font-size: 12px; letter-spacing: 4px; font-weight: 500; text-transform: uppercase; transition: var(--trans-quick); }
+        .focus-exit-hint:hover { color: var(--accent); cursor: pointer; }
+
+        /* Responsive */
+        @media (max-width: 1250px) { .main-grid { grid-template-columns: 1fr 1fr; } .main-grid > .card:nth-child(2) { grid-column: 1 / -1; order: -1; } }
+        @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } .header-strip { flex-direction: column; text-align: center; } .quote-wrapper { width: 100%; margin: 15px 0; } .cd-group { width: 100%; justify-content: center; flex-wrap: wrap;} .timer-display { font-size: 85px; } .style3-box { width: 80px; height: 100px; } .style3-num { font-size: 45px; } .style3-label {font-size: 9px; bottom: 8px;} .style2-container { width: 250px; height: 250px;} .style2-text {font-size: 45px;}}
+    </style>
+</head>
+<body>
+
+<div class="header-strip">
+    <div class="logo-area">SĨ TỬ <span style="color:var(--accent)">2026</span></div>
+    
+    <div class="quote-wrapper">
+        <div id="random-quote">"Trí thức là sức mạnh"</div>
+        <button class="btn-icon" title="Chỉnh sửa châm ngôn" onclick="openEditQuoteModal()">✎</button>
+    </div>
+    
+    <div class="cd-group">
+        <div class="cd-box"><span class="cd-num" id="d">00</span><span class="cd-lbl">Ngày</span></div>
+        <div class="cd-box"><span class="cd-num" id="h">00</span><span class="cd-lbl">Giờ</span></div>
+        <div class="cd-box"><span class="cd-num" id="m">00</span><span class="cd-lbl">Phút</span></div>
+        <div class="cd-box" style="background: rgba(92, 225, 230, 0.15); border: 1px solid rgba(92, 225, 230, 0.3);"><span class="cd-num" id="s" style="color: var(--accent);">00</span><span class="cd-lbl" style="color: var(--accent);">Giây</span></div>
+    </div>
+</div>
+
+<div class="main-grid">
+    <div class="card">
+        <span class="section-label">🎯 Mục tiêu điểm số</span>
+        <div id="score-container" style="flex-grow: 1; overflow-y: auto; padding-right: 5px;"></div>
+        
+        <div style="margin-top: 18px; padding: 22px; background: var(--box-inner); border-radius: 18px; border: 1px solid transparent;">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 14px;">
+                <span style="opacity:0.8; font-size:15px; font-weight:600;">Tổng điểm khối:</span>
+                <span class="score-val" id="total-block">0.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="opacity:0.8; font-size:15px; font-weight:600;">Tổng điểm (All):</span>
+                <span class="score-val" id="total-all" style="color:white">0.00</span>
+            </div>
+        </div>
+        <button class="btn" style="width:100%; margin-top:18px;" onclick="openConfig()">⚙️ Cài đặt môn học</button>
+    </div>
+
+    <div class="card timer-card">
+        <div class="timer-hero">
+            <button class="btn btn-focus" id="btn-focus" onclick="toggleFocusMode()">DEEP WORK</button>
+
+            <div style="display:flex; gap:10px; background:var(--box-inner); padding:8px; border-radius:18px; border: 1px solid transparent; margin-top: 30px;">
+                <button class="btn btn-mini" style="padding:10px 22px; border:none;" id="mode-pomo" onclick="setMode('pomo')">Học / Làm đề</button>
+                <button class="btn btn-mini" style="padding:10px 22px; border:none;" id="mode-break" onclick="setMode('break')">Nghỉ ngơi</button>
+                <button class="btn btn-mini" style="padding:10px 22px; border:none;" id="mode-sw" onclick="setMode('sw')">Tự do</button>
+            </div>
+
+            <div id="pomo-settings" style="display:flex; gap:9px; margin-top: 18px;">
+                <button class="btn-mini" onclick="setPomoTime(25)">25p</button>
+                <button class="btn-mini" onclick="setPomoTime(50)">50p</button>
+                <button class="btn-mini" onclick="setPomoTime(90)" style="color: var(--accent); border-color: rgba(92, 225, 230, 0.4); background: rgba(92, 225, 230, 0.1);">90p (Đề)</button>
+                <button class="btn-mini" style="border-style: dashed; opacity: 0.8" onclick="openCustomTimeModal()">✏️ Tùy chỉnh</button>
+            </div>
+
+            <div class="timer-display" id="main-timer">25:00</div>
+
+            <div style="display:flex; gap:15px; flex-wrap: wrap; justify-content: center;">
+                <button class="btn btn-primary" id="ctrl-start" onclick="toggleTimer()" style="padding: 16px 55px; font-size: 16px;">BẮT ĐẦU</button>
+                <button class="btn" style="color: var(--text-dim)" onclick="resetTimer()">LÀM MỚI</button>
+            </div>
+
+            <div style="margin-top: 45px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; width: 100%;">
+                <div class="card" style="background: var(--box-inner); padding: 22px; border: 1px solid transparent;">
+                    <span class="section-label" style="font-size: 10px; color: var(--text-dim);">Học hôm nay</span>
+                    <h2 style="margin:5px 0; font-family: 'JetBrains Mono'; font-weight: 800; color: #fff;" id="today-study-val">0h 00m</h2>
+                </div>
+                <div class="card" style="background: var(--box-inner); padding: 22px; border: 1px solid transparent;">
+                    <span class="section-label" style="font-size: 10px;">Môn cần ưu tiên</span>
+                    <h2 style="margin:5px 0; color: var(--accent); font-weight: 800;" id="next-subject">--</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="section-label">📝 Nhiệm vụ trọng tâm</span>
+        <div class="progress-bar"><div class="progress-fill" id="task-progress"></div></div>
+        
+        <div class="task-input-group">
+            <input type="text" id="task-in" placeholder="Thêm việc cần làm (Nhấn Enter)..." onkeyup="if(event.key==='Enter')addTask()">
+        </div>
+        <div id="task-list" class="task-list"></div>
+
+        <div style="margin-top: auto; padding-top: 22px; border-top: 1px solid var(--border);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="section-label" style="margin:0;">📊 Lịch sử học</span>
+                
+                <div style="display:flex; align-items:center; gap: 6px; background: var(--box-inner); border-radius: 12px; padding: 3px 5px; border: 1px solid transparent;">
+                    <button class="btn-mini" style="border:none; padding: 4px 10px; color: #fff;" onclick="changeCalMonth(-1)">&#10094;</button>
+                    <span id="month-label" style="font-size: 13px; font-weight: 700; min-width: 90px; text-align: center; color: #fff;">Tháng 0/0</span>
+                    <button class="btn-mini" style="border:none; padding: 4px 10px; color: #fff;" onclick="changeCalMonth(1)">&#10095;</button>
+                </div>
+            </div>
+            <div class="cal-grid" id="calendar-el"></div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-edit-quote" class="modal">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 22px;">
+            <span class="section-label" style="margin:0;">✏️ Sửa châm ngôn động lực</span>
+            <button class="btn-icon" style="opacity: 0.5" onclick="closeEditQuoteModal()">✕</button>
+        </div>
+        <textarea id="edit-quote-input" placeholder="Nhập câu châm ngôn của bạn..." rows="4" style="margin-bottom: 22px; resize: none;"></textarea>
+        <div style="display: flex; gap: 12px;">
+            <button class="btn" style="flex: 1; color: var(--text-dim)" onclick="closeEditQuoteModal()">Hủy</button>
+            <button class="btn btn-primary" style="flex: 1;" onclick="applyNewQuote()">Lưu & Hiển thị</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-config" class="modal">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 22px;">
+            <span class="section-label" style="margin:0;">⚙️ Quản lý môn học THPTQG</span>
+            <button class="btn-icon" style="opacity: 0.5" onclick="closeConfig()">✕</button>
+        </div>
+        <div id="modal-sub-list" style="max-height: 380px; overflow-y: auto; margin-bottom: 22px; padding-right: 5px;"></div>
+        <div style="background: var(--box-inner); padding: 18px; border-radius: 16px; border: 1px dashed rgba(255,255,255,0.15);">
+            <div style="font-size: 13px; font-weight: 700; margin-bottom: 12px; opacity: 0.8">THÊM MÔN MỚI</div>
+            <div style="display:flex; gap:12px;">
+                <input type="text" id="add-name" placeholder="Tên môn thi..." style="flex:1;">
+                <button class="btn btn-primary" onclick="addNewSubject()">Thêm</button>
+            </div>
+        </div>
+        <button class="btn" style="width:100%; margin-top: 18px; justify-content: center;" onclick="closeConfig()">LƯU TẤT CẢ & ĐÓNG</button>
+    </div>
+</div>
+
+<div id="modal-custom-time" class="modal">
+    <div class="modal-content" style="max-width: 380px; text-align: center;">
+        <div class="section-label" style="margin-bottom: 22px;">⏱ Tùy chỉnh thời gian học</div>
+        <input type="number" id="custom-time-input" placeholder="Nhập số phút (VD: 45, 120)..." style="margin-bottom: 22px;" onkeyup="if(event.key==='Enter')applyCustomTime()">
+        <div style="display: flex; gap: 12px;">
+            <button class="btn" style="flex: 1; color: var(--text-dim)" onclick="closeCustomTimeModal()">Hủy</button>
+            <button class="btn btn-primary" style="flex: 1;" onclick="applyCustomTime()">Áp dụng</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-confirm" class="modal">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+        <div class="section-label" style="color: var(--accent); margin-bottom: 15px;">⚠️ Xác nhận</div>
+        <p id="confirm-msg" style="margin-bottom: 28px; font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.85);"></p>
+        <div style="display: flex; gap: 12px;">
+            <button class="btn" style="flex: 1; color: var(--text-dim)" onclick="closeConfirmModal()">Hủy</button>
+            <button class="btn btn-primary" id="confirm-yes-btn" style="flex: 1;">Đồng ý</button>
+        </div>
+    </div>
+</div>
+
+<div id="focus-overlay" onclick="handleFocusClick(event)">
+    <div id="focus-progress-top"></div>
+    
+    <button class="btn-switch-clock" onclick="switchClockStyle(event)">
+        <span>🔄</span> Đổi giao diện
+    </button>
+    
+    <div class="clock-wrapper">
+        <div id="clock-style-0" class="clock-view active">
+            <div class="style1-ring">
+                <div class="style1-text" id="focus-t1">00:00:00</div>
+            </div>
+        </div>
+
+        <div id="clock-style-1" class="clock-view">
+            <div class="style2-container">
+                <svg class="style2-svg" viewBox="0 0 300 300">
+                    <circle class="style2-circle-bg" cx="150" cy="150" r="140"></circle>
+                    <circle class="style2-circle-prog" id="focus-t2-prog" cx="150" cy="150" r="140"></circle>
+                </svg>
+                <div class="style2-text" id="focus-t2">00:00</div>
+            </div>
+        </div>
+
+        <div id="clock-style-2" class="clock-view">
+            <div class="style3-container">
+                <div class="style3-box"><span class="style3-num" id="focus-t3-h">00</span><span class="style3-label">Giờ</span></div>
+                <span class="style3-colon">:</span>
+                <div class="style3-box"><span class="style3-num" id="focus-t3-m">00</span><span class="style3-label">Phút</span></div>
+                <span class="style3-colon">:</span>
+                <div class="style3-box"><span class="style3-num" id="focus-t3-s">00</span><span class="style3-label">Giây</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="focus-mode-title">
+        <div class="live-dot" id="focus-dot"></div>
+        <span id="focus-subtitle">DEEP WORK</span>
+    </div>
+    
+    <div class="focus-exit-hint">Click outside to exit</div>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+    const DB = {
+        save: (key, data) => localStorage.setItem('SITU2026_'+key, JSON.stringify(data)),
+        get: (key, def) => JSON.parse(localStorage.getItem('SITU2026_'+key)) || def
+    };
+
+    let subjects = DB.get('subs', [
+        {name: 'Toán học', score: 8.5, inBlock: true},
+        {name: 'Ngữ Văn', score: 8.0, inBlock: true},
+        {name: 'Tiếng Anh', score: 9.0, inBlock: true},
+        {name: 'Vật Lý', score: 7.5, inBlock: false}
+    ]);
+    let history = DB.get('hist', {});
+    let tasks = DB.get('tasks', [{text: 'Làm đề Toán Sở Hà Nội', done: false}]);
+    
+    let currentQuote = DB.get('user_quote', "Trí thức là sức mạnh");
+    document.getElementById('random-quote').innerText = `"${currentQuote}"`;
+
+    const TIMES = { pomo: 25 * 60, break: 5 * 60, sw: 0 };
+    const modesList = ['pomo', 'break', 'sw'];
+    const focusTitles = ['DEEP WORK', 'BREAK TIME', 'FREE WATCH'];
+    
+    let timerMode = 'pomo'; 
+    let timeLeft = TIMES.pomo;
+    let timerInt = null;
+    let isRunning = false;
+    let isFocusMode = false;
+    let pendingConfirmAction = null; 
+
+    // Quản lý Style Đồng hồ
+    let currentClockStyle = DB.get('clock_style', 0); // 0, 1, 2
+    
+    let calViewYear = new Date().getFullYear();
+    let calViewMonth = new Date().getMonth();
+
+    // Khởi tạo hiển thị style đồng hồ lưu từ trước
+    function applyCurrentClockView() {
+        document.querySelectorAll('.clock-view').forEach((el, idx) => {
+            if(idx === currentClockStyle) el.classList.add('active');
+            else el.classList.remove('active');
+        });
+        updateTimerUI(); // render lại ngay sau khi đổi
+    }
+    applyCurrentClockView();
+
+    function switchClockStyle(e) {
+        e.stopPropagation(); // Ngăn việc đóng modal overlay
+        currentClockStyle = (currentClockStyle + 1) % 3;
+        DB.save('clock_style', currentClockStyle);
+        applyCurrentClockView();
+    }
+
+    function openEditQuoteModal() {
+        document.getElementById('modal-edit-quote').classList.add('show');
+        document.getElementById('edit-quote-input').value = currentQuote;
+        document.getElementById('edit-quote-input').focus();
+    }
+    function closeEditQuoteModal() { document.getElementById('modal-edit-quote').classList.remove('show'); }
+
+    function applyNewQuote() {
+        const val = document.getElementById('edit-quote-input').value.trim();
+        if(val) { currentQuote = val; DB.save('user_quote', currentQuote); document.getElementById('random-quote').innerText = `"${currentQuote}"`; closeEditQuoteModal(); showToast("Đã cập nhật châm ngôn mới!");
+        } else { showToast("Vui lòng nhập câu châm ngôn!"); }
+    }
+
+    function showConfirm(msg, actionCallback) {
+        document.getElementById('confirm-msg').innerText = msg;
+        document.getElementById('modal-confirm').classList.add('show');pendingConfirmAction = actionCallback;
+    }
+    function closeConfirmModal() { document.getElementById('modal-confirm').classList.remove('show'); pendingConfirmAction = null; }
+    document.getElementById('confirm-yes-btn').onclick = () => { if (pendingConfirmAction) pendingConfirmAction(); closeConfirmModal(); };
+
+    function showToast(msg) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast'; toast.innerText = msg;
+        container.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3000);
+    }
+
+    function toggleFocusMode() {
+        isFocusMode = !isFocusMode;
+        const overlay = document.getElementById('focus-overlay');
+        if(isFocusMode) {
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.classList.add('show'), 10);
+            updateFocusSubtitle();
+        } else {
+            overlay.classList.remove('show');
+            setTimeout(() => overlay.style.display = 'none', 800);
+        }
+    }
+
+    function handleFocusClick(e) { 
+        if(e.target.id === 'focus-overlay' || e.target.className === 'focus-exit-hint') toggleFocusMode(); 
+    }
+
+    function executeSetModeSecret(m) {
+        document.getElementById('pomo-settings').style.display = (m === 'pomo') ? 'flex' : 'none';
+        ['pomo', 'break', 'sw'].forEach(mode => {
+            const btn = document.getElementById(`mode-${mode}`);
+            btn.style.background = (m === mode) ? 'var(--accent)' : 'transparent';
+            btn.style.color = (m === mode) ? '#0b2223' : '#fff';
+        });
+    }
+
+    function updateFocusSubtitle() {
+        const idx = modesList.indexOf(timerMode);
+        document.getElementById('focus-subtitle').innerText = focusTitles[idx];
+        const dot = document.getElementById('focus-dot');
+        if(timerMode === 'pomo') { dot.style.background = '#ff0055'; dot.style.boxShadow = '0 0 10px #ff0055'; }
+        else if(timerMode === 'break') { dot.style.background = '#00ffff'; dot.style.boxShadow = '0 0 10px #00ffff'; }
+        else { dot.style.background = '#ffaa00'; dot.style.boxShadow = '0 0 10px #ffaa00'; }
+    }
+
+    function updateCountdown() {
+        const gap = new Date("2026-06-11T07:00:00") - new Date();
+        if (gap < 0) return;
+        document.getElementById('d').innerText = Math.floor(gap/86400000).toString().padStart(2,'0');
+        document.getElementById('h').innerText = Math.floor((gap%86400000)/3600000).toString().padStart(2,'0');
+        document.getElementById('m').innerText = Math.floor((gap%3600000)/60000).toString().padStart(2,'0');
+        document.getElementById('s').innerText = Math.floor((gap%60000)/1000).toString().padStart(2,'0');
+    }
+    setInterval(updateCountdown, 1000); updateCountdown();
+
+    function renderScores() {
+        const container = document.getElementById('score-container');
+        let blockSum = 0, totalSum = 0; let lowestSub = {name: '--', score: 10};
+        container.innerHTML = subjects.map(s => {
+            totalSum += s.score; if(s.inBlock) blockSum += s.score; if(s.score < lowestSub.score) lowestSub = s; 
+            return `<div class="score-row"><span style="font-weight:600">${s.name}${s.inBlock ? '<span class="tag-khôi">KHỐI</span>' : ''}</span><span class="score-val">${s.score.toFixed(1)}</span></div>`;
+        }).join('');
+        document.getElementById('total-block').innerText = blockSum.toFixed(2);
+        document.getElementById('total-all').innerText = totalSum.toFixed(2);
+        document.getElementById('next-subject').innerText = subjects.length ? lowestSub.name.toUpperCase() : '--';
+    }
+
+    function setPomoTime(minutes) { isRunning ? showConfirm("Đồng hồ đang chạy. Đổi thời gian và làm mới lại?", () => executeSetTime(minutes)) : executeSetTime(minutes); }
+    function executeSetTime(minutes) {
+        if(isRunning) resetTimer();
+        TIMES.pomo = minutes * 60;
+        if(timerMode === 'pomo') { timeLeft = TIMES.pomo; updateTimerUI(); }
+        showToast(`Đã đặt Pomodoro: ${minutes} phút`);
+    }
+
+    function openCustomTimeModal() { document.getElementById('modal-custom-time').classList.add('show'); document.getElementById('custom-time-input').value = ''; document.getElementById('custom-time-input').focus(); }
+    function closeCustomTimeModal() { document.getElementById('modal-custom-time').classList.remove('show'); }
+    function applyCustomTime() {
+        const val = document.getElementById('custom-time-input').value;
+        if(val && !isNaN(val) && val > 0) { setPomoTime(parseInt(val)); closeCustomTimeModal(); } else { showToast("Vui lòng nhập số hợp lệ!"); }
+    }
+
+    function setMode(m) { isRunning && timerMode !== m ? showConfirm("Đang đếm thời gian. Bạn có chắc muốn đổi chế độ?", () => executeSetMode(m)) : executeSetMode(m); }
+    function executeSetMode(m) {
+        if(isRunning) resetTimer();
+        timerMode = m; timeLeft = TIMES[m];
+        executeSetModeSecret(m);
+        updateFocusSubtitle();
+        updateTimerUI();
+    }
+
+    function updateTimerUI() {
+        const h = Math.floor(timeLeft/3600), m = Math.floor((timeLeft%3600)/60), s = timeLeft%60;
+        
+        const hStr = h.toString().padStart(2,'0');
+        const mStr = m.toString().padStart(2,'0');
+        const sStr = s.toString().padStart(2,'0');
+        
+        const focusFormat = `${hStr}:${mStr}:${sStr}`;
+        const mainFormat = (h > 0 || timerMode === 'sw') ? `${h > 0 ? h + ':' : ''}${mStr}:${sStr}` : `${mStr}:${sStr}`;
+        
+        // Cập nhật thẻ hiển thị ngoài main card
+        document.getElementById('main-timer').innerText = mainFormat;
+        document.title = `${mainFormat} - Sĩ Tử 2026`;
+
+        // Tính toán thanh tiến độ phần trăm chung
+        const totalTime = TIMES[timerMode];
+        let progressPercent = 0;
+        if(totalTime > 0) {
+            progressPercent = ((totalTime - timeLeft) / totalTime) * 100;
+        }
+        document.getElementById('focus-progress-top').style.width = timerMode === 'sw' ? '0%' : `${progressPercent}%`;
+
+        // Cập nhật Đồng hồ theo Style hiện tại trong Deep Work
+        if(currentClockStyle === 0) {
+            // Style 1: Cyber Glow
+            document.getElementById('focus-t1').innerText = focusFormat;
+        } else if (currentClockStyle === 1) {
+            // Style 2: Zen Circle
+            document.getElementById('focus-t2').innerText = (h > 0) ? focusFormat : `${mStr}:${sStr}`;
+            // 2 * Pi * r (140) = 879.64. Giá trị 880 là chu vi.
+            const offset = 880 - (880 * progressPercent / 100);
+            document.getElementById('focus-t2-prog').style.strokeDashoffset = timerMode === 'sw' ? 0 : offset;
+        } else if (currentClockStyle === 2) {
+            // Style 3: Retro Box
+            document.getElementById('focus-t3-h').innerText = hStr;
+            document.getElementById('focus-t3-m').innerText = mStr;
+            document.getElementById('focus-t3-s').innerText = sStr;
+        }
+    }
+
+    function toggleTimer() {
+        const btn = document.getElementById('ctrl-start');
+        const dot = document.getElementById('focus-dot');
+        if(isRunning) {
+            clearInterval(timerInt); isRunning = false; btn.innerText = "TIẾP TỤC"; btn.classList.remove('btn-danger');
+            dot.style.animation = 'none'; dot.style.opacity = '0.3';
+        } else {
+            isRunning = true; btn.innerText = "TẠM DỪNG"; btn.classList.add('btn-danger');
+            dot.style.animation = 'blink 1.5s infinite ease-in-out';
+            timerInt = setInterval(() => {
+                if(timerMode === 'pomo' || timerMode === 'break') {
+                    if(timeLeft > 0) { timeLeft--; if(timerMode === 'pomo') addStudyLog(1); }
+                    else { clearInterval(timerInt); if(timerMode === 'pomo') showToast("🎉 Hoàn thành phiên! Nghỉ thôi."); else showToast("⏰ Hết giờ nghỉ! Vào học."); resetTimer(); setMode(timerMode === 'pomo' ? 'break' : 'pomo'); }
+                } else { timeLeft++; addStudyLog(1); }
+                updateTimerUI();
+            }, 1000);
+        }
+    }
+
+    function resetTimer() {
+        clearInterval(timerInt); isRunning = false; timeLeft = TIMES[timerMode]; updateTimerUI();
+        const btn = document.getElementById('ctrl-start');
+        btn.innerText = "BẮT ĐẦU"; btn.classList.remove('btn-danger');
+        document.getElementById('focus-dot').style.animation = 'none'; document.getElementById('focus-dot').style.opacity = '0.3';
+    }
+
+    function addStudyLog(sec) {
+        const today = new Date().toLocaleDateString('sv-SE');
+        history[today] = (history[today] || 0) + sec;
+        if (sec % 60 === 0 || history[today] % 60 === 0) { DB.save('hist', history); updateTodayStats(); }
+    }
+
+    function updateTodayStats() {
+        const today = new Date().toLocaleDateString('sv-SE');
+        const sec = history[today] || 0;
+        document.getElementById('today-study-val').innerText = `${Math.floor(sec/3600)}h ${Math.floor((sec%3600)/60)}m`;
+        renderCalendar();
+    }
+
+    function changeCalMonth(dir) {
+        calViewMonth += dir;
+        if(calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+        else if(calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
+        renderCalendar();
+    }
+
+    function renderCalendar() {
+        const el = document.getElementById('calendar-el'); el.innerHTML = '';
+        document.getElementById('month-label').innerText = `T${calViewMonth + 1}/${calViewYear}`;
+        
+        ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].forEach(day => el.innerHTML += `<div class="cal-header">${day}</div>`);
+        
+        const daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
+        let startOffset = new Date(calViewYear, calViewMonth, 1).getDay() - 1;
+        if(startOffset === -1) startOffset = 6;
+        
+        for(let i = 0; i < startOffset; i++) el.innerHTML += `<div class="cal-day empty"></div>`;
+        
+        for(let i = 1; i <= daysInMonth; i++) {
+            const dateStr = `${calViewYear}-${(calViewMonth+1).toString().padStart(2,'0')}-${i.toString().padStart(2,'0')}`;
+            const isToday = new Date().toLocaleDateString('sv-SE') === dateStr;
+            const studySecs = history[dateStr] || 0;
+            
+            let bgAlpha = studySecs > 14400 ? 0.8 : studySecs > 7200 ? 0.5 : studySecs > 0 ? 0.3 : 0;
+            const tooltipStr = studySecs > 0 ? `${Math.floor(studySecs/3600)}h ${Math.floor((studySecs%3600)/60)}m` : 'Chưa học';
+            
+            el.innerHTML += `<div class="cal-day ${isToday ? 'active' : ''}" title="Ngày ${i}: ${tooltipStr}">${i}${studySecs > 0 ? `<div class="cal-mark" style="background: rgba(92, 225, 230, ${bgAlpha}); box-shadow: none;"></div>` : ''}</div>`;
+        }
+    }
+
+    function addTask() {
+        const input = document.getElementById('task-in');
+        if(input.value.trim()) { tasks.unshift({text: input.value, done: false}); DB.save('tasks', tasks); input.value = ''; renderTasks(); }
+    }
+    function renderTasks() {
+        let doneCount = 0;
+        document.getElementById('task-list').innerHTML = tasks.map((t, i) => {
+            if(t.done) doneCount++;
+            return `<div class="task-item ${t.done ? 'done' : ''}" onclick="toggleTask(${i})"><div class="dot"></div><span style="flex:1; font-weight: 500;">${t.text}</span><span class="del-btn" onclick="event.stopPropagation(); deleteTask(${i})">✕</span></div>`;
+        }).join('');
+        document.getElementById('task-progress').style.width = `${tasks.length ? (doneCount / tasks.length) * 100 : 0}%`;
+    }
+    function toggleTask(i) { tasks[i].done = !tasks[i].done; DB.save('tasks', tasks); renderTasks(); }
+    function deleteTask(i) { tasks.splice(i, 1); DB.save('tasks', tasks); renderTasks(); }
+
+    function openConfig() {
+        document.getElementById('modal-config').classList.add('show');
+        document.getElementById('modal-sub-list').innerHTML = subjects.map((s, i) => `
+            <div style="display:flex; gap:12px; margin-bottom:12px; align-items:center; background:var(--box-inner); padding:12px; border-radius:16px;">
+                <label style="display:flex; align-items:center; cursor:pointer;" title="Tính vào tổng điểm khối"><input type="checkbox" style="width:19px; height:19px; accent-color: var(--accent);" ${s.inBlock ? 'checked' : ''} onchange="subjects[${i}].inBlock=this.checked"></label>
+                <input type="text" value="${s.name}" onchange="subjects[${i}].name=this.value" style="flex:1; padding:12px 15px;">
+                <input type="number" value="${s.score}" step="0.1" min="0" max="10" onchange="subjects[${i}].score=parseFloat(this.value)||0" style="width:75px; padding:12px 10px; text-align:center;">
+                <button class="btn btn-danger" style="padding: 12px; border-radius: 12px;" onclick="deleteSubject(${i})">✕</button>
+            </div>`).join('');
+    }
+    function closeConfig() { document.getElementById('modal-config').classList.remove('show'); DB.save('subs', subjects); renderScores(); }
+    function addNewSubject() {
+        const name = document.getElementById('add-name').value;
+        if(name.trim()) { subjects.push({name: name.trim(), score: 0, inBlock: false}); document.getElementById('add-name').value = ''; openConfig(); showToast("Đã thêm môn học mới!"); }
+    }
+    function deleteSubject(i) {
+        showConfirm(`Xóa môn "${subjects[i].name}" khỏi danh sách?`, () => { subjects.splice(i,1); openConfig(); showToast("Đã xóa môn học."); });
+    }
+
+    setMode('pomo'); renderScores(); renderTasks(); updateTodayStats(); document.getElementById('focus-dot').style.animation = 'none';
+    window.addEventListener('beforeunload', () => { if(isRunning) DB.save('hist', history); });
+</script>
+
+</body>
+</html>
